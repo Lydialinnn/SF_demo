@@ -99,3 +99,38 @@ url = 's3://sf-2603-0415/ext_stage/'
 storage_integration = s3_integration
 
 list @SNOWFLAKE_LEARNING_DB.PUBLIC.stg_s3_integration
+
+
+
+-- external table: sit on top of external stage/ integrated stage
+
+create or replace external table init_po (
+    ID STRING as (value:c1::string),
+    BlindReceipt BOOLEAN as (TRY_TO_BOOLEAN(value:c2::string)),
+    OrderNumber STRING as (value:c3::string),
+    Status STRING as (value:c4::string),
+    OrderDate DATE as (TRY_TO_DATE(value:c5::string)),
+    InvoiceDate DATE as (TRY_TO_DATE(value:c6::string)),
+    Supplier STRING as (value:c7::string),
+    SupplierID STRING as (value:c8::string),
+    InvoiceNumber STRING as (value:c9::string),
+    InvoiceAmount NUMBER as (TRY_TO_NUMBER(value:c10::string)),
+    PaidAmount NUMBER as (TRY_TO_NUMBER(value:c11::string)),
+    BaseCurrency STRING as (value:c12::string),
+    SupplierCurrency STRING as (value:c13::string),
+    OrderStatus STRING as (value:c14::string),
+    StockReceivedStatus STRING as (value:c15::string),
+    UnstockStatus STRING as (value:c16::string),
+    InvoiceStatus STRING as (value:c17::string),
+    LastUpdatedDate DATE as (TRY_TO_DATE(value:c18::string)),
+    Type STRING as (value:c19::string),
+    CombinedInvoiceStatus STRING as (value:c20::string),
+    CombinedPaymentStatus STRING as (value:c21::string),
+    CombinedReceivingStatus  STRING as (value:c22::string),
+    db_refreshed_at TIMESTAMP as (TRY_TO_TIMESTAMP(value:c23::string))
+)
+location = @SNOWFLAKE_LEARNING_DB.PUBLIC.stg_s3_integration
+file_format = SNOWFLAKE_LEARNING_DB.PUBLIC.CSV_FILEFORMAT;
+
+
+select * from init_po
